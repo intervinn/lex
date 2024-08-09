@@ -17,18 +17,9 @@ func NewIntLiteral(pos, end int, str string) *IntLiteral {
 			End: end,
 
 			Kind: kind.IntLiteral,
-		},
-
-		BaseLiteral{
 			Text: str,
 		},
+
+		BaseLiteral{},
 	}
-}
-
-func (i *IntLiteral) GetWidth() int {
-	return len(i.Text)
-}
-
-func (i *IntLiteral) GetText() string {
-	return i.Text
 }

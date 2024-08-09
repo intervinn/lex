@@ -1,18 +1,30 @@
 package token
 
 import (
-	"github.com/intervinn/mx/kind"
 	"github.com/intervinn/mx/node"
 )
 
 type BaseToken struct {
 	node.BaseNode
+	Text string
 }
 
-func NewToken(tkind int) {
-	switch tkind {
-	case kind.PlusToken:
-		break
+func NewToken(pos, end int, text string, tkind int) *BaseToken {
+	return &BaseToken{
+		BaseNode: node.BaseNode{
+			Pos: pos,
+			End: end,
+
+			Kind: tkind,
+		},
+		Text: text,
 	}
-	return
+}
+
+func (b *BaseToken) GetWidth() int {
+	return len(b.Text)
+}
+
+func (b *BaseToken) GetText() string {
+	return b.Text
 }

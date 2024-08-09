@@ -11,4 +11,9 @@ type BaseNode struct {
 	End int
 
 	Kind int
+	Text string
+}
+
+func (b *BaseNode) Width() int {
+	return len(b.Text)
 }
