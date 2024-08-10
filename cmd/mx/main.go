@@ -47,11 +47,6 @@ func main() {
 	pos := 0
 	captured := []node.BaseNodeInterface{}
 
-	/*
-		s := &node.SourceFile{
-			Statements: []node.BaseNodeInterface{},
-		}*/
-
 	Next := func() rune {
 		return rune(line[i+1])
 	}

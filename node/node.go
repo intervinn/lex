@@ -14,6 +14,10 @@ type BaseNode struct {
 	Text string
 }
 
-func (b *BaseNode) Width() int {
+func (b *BaseNode) GetWidth() int {
 	return len(b.Text)
+}
+
+func (b *BaseNode) GetText() string {
+	return b.Text
 }
