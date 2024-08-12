@@ -6,13 +6,13 @@ import (
 )
 
 type IntLiteral struct {
-	node.BaseNode
+	*node.BaseNode
 	BaseLiteral
 }
 
 func NewIntLiteral(pos, end int, str string) *IntLiteral {
 	return &IntLiteral{
-		node.BaseNode{
+		&node.BaseNode{
 			Pos: pos,
 			End: end,
 

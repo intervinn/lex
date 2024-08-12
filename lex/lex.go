@@ -2,13 +2,8 @@ package lex
 
 import (
 	"fmt"
-	"unicode"
 
-	"github.com/intervinn/mx/kind"
-	"github.com/intervinn/mx/lex/predicate"
 	"github.com/intervinn/mx/node"
-	"github.com/intervinn/mx/node/literal"
-	"github.com/intervinn/mx/node/token"
 )
 
 func Type[T any](v any) (T, bool) {
@@ -16,82 +11,56 @@ func Type[T any](v any) (T, bool) {
 	return res, ok
 }
 
-func Line(line string) []node.BaseNodeInterface {
-	i := 0
-	c := '0'
-	eof := len(line) - 1
-	pos := 0
-	tmp := ""
-	captured := []node.BaseNodeInterface{}
-	cmode := -1 // which kind do we capture
+var (
+	line  string
+	tmp   string
+	char  rune
+	index int
+	eof   int
+	pos   int
+	cmode int
 
-	Next := func() rune {
-		return rune(line[i+1])
+	captured []node.BaseNodeInterface
+)
+
+func next() rune {
+	return rune(line[index+1])
+}
+
+func clear() {
+	captured = captured[:0]
+}
+
+func canCapture(k int) bool {
+	return cmode == k || cmode == -1
+}
+
+func capture(k int) {
+	cmode = k
+}
+
+func release() {
+	cmode = -1
+	tmp = ""
+}
+
+// Parses line string and returns the given expression.
+func Line(l string) node.BaseNodeInterface {
+	eof = len(l) - 1
+	line = l
+	clear()
+	release()
+
+	for index, char = range line {
+		analyzeLiteral()
+		analyzeToken()
 	}
 
-	Clear := func() {
-		captured = captured[:0]
+	fmt.Printf("%#v\n", captured)
+	res := analyzeStatement()
+	if res == nil {
+		panic("undefined expression")
 	}
 
-	CanCapture := func(k int) bool {
-		return cmode == k || cmode == -1
-	}
-
-	Release := func() {
-		cmode = -1
-		tmp = ""
-	}
-
-	Capture := func(k int) {
-		cmode = k
-	}
-
-	for i, c = range line {
-
-		// INT LITERAL
-		if unicode.IsDigit(c) && CanCapture(kind.IntLiteral) {
-			Capture(kind.IntLiteral)
-			if tmp == "" {
-				pos = i
-			}
-
-			tmp += string(c)
-
-			if i == eof || predicate.IsEndLiteral(Next()) {
-				captured = append(
-					captured,
-					literal.NewIntLiteral(pos, i, tmp),
-				)
-				Release()
-			}
-		}
-
-		if predicate.IsToken(c) {
-			if tmp == "" {
-				pos = i
-			}
-			tmp += string(c)
-
-			if i == eof || predicate.IsEnd(Next()) {
-				tk, err := token.NewToken(pos, i, tmp)
-
-				if err != nil {
-					panic(err)
-				}
-
-				captured = append(
-					captured,
-					tk,
-				)
-				Release()
-			}
-		}
-
-		// END OF LINE
-		if i == eof {
-			fmt.Printf("%#v\n", captured)
-			Clear()
-		}
-	}
-	return captured
+	return res
 }

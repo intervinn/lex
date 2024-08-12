@@ -6,7 +6,6 @@ type BaseNodeInterface interface {
 }
 
 type BaseNode struct {
-	BaseNodeInterface
 	Pos int
 	End int
 

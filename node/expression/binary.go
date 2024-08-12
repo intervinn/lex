@@ -7,12 +7,12 @@ import (
 
 type BinaryExpression struct {
 	node.BaseNode
-	Left          node.BaseNode
-	Right         node.BaseNode
-	OperatorToken node.BaseNode
+	Left          node.BaseNodeInterface
+	Right         node.BaseNodeInterface
+	OperatorToken node.BaseNodeInterface
 }
 
-func NewBinaryExpression(pos, end int, left, op, right node.BaseNode) *BinaryExpression {
+func NewBinaryExpression(pos, end int, left, op, right node.BaseNodeInterface) *BinaryExpression {
 	return &BinaryExpression{
 		BaseNode: node.BaseNode{
 			Kind: kind.BinaryExpression,

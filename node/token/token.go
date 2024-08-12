@@ -8,7 +8,7 @@ import (
 )
 
 type BaseToken struct {
-	node.BaseNode
+	*node.BaseNode
 }
 
 func MatchKind(s string) int {
@@ -33,7 +33,7 @@ func NewToken(pos, end int, text string) (node.BaseNodeInterface, error) {
 	}
 
 	base := BaseToken{
-		node.BaseNode{
+		&node.BaseNode{
 			Pos: pos,
 			End: end,
 
